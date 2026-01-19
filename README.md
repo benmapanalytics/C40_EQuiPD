@@ -1,5 +1,7 @@
-# C40_EQuiPD
-Equity in Air Quality Policy and Data Ecosystem - Shiny App
+# C40_EQuiPD: Technical documentation
+
+**Equity in Air Quality Policy and Data Ecosystem - Shiny App**
+Currently deployed at: https://dan-benmapanalytics.shinyapps.io/c40_air_quality_health_and_equity_ecosystem/
 
 Steps to setup and publish this Shiny App:
 

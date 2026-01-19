@@ -3,7 +3,7 @@
 ############################################################
 library(shiny)
 library(shinyjs)
-library(bslib)
+# library(bslib)
 library(tidyverse)
 library(ggforce)
 library(readxl)
@@ -159,10 +159,10 @@ server <- function(input, output, session) {
                       choices = c("", unique(data$city)), 
                       selected = input$city)
     updateSelectInput(session, "response1",
-                      choices = c("", unique(data$name_date[which(data$city == city)])),
-                      selected = unique(data$name_date[which(data$city == city)])[1])
+                      choices = c("", unique(data$name_date[which(data$city == input$city)])),
+                      selected = unique(data$name_date[which(data$city == input$city)])[1])
     updateSelectInput(session, "response2",
-                      choices = c("", unique(data$name_date[which(data$city == city &
+                      choices = c("", unique(data$name_date[which(data$city == input$city &
                                                                     data$name_date != input$response1)])),
                       selected = "")
   })
