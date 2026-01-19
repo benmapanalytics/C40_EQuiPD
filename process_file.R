@@ -11,7 +11,7 @@ process_file <- function(path, file, rec, org, responses) {
   if (city == "Not listed")
     city <- file[["Response"]][which(file[["short_q"]] == "Other_city")]
   if (city == "") {
-    shinyalert("Unsuccessful", "You must input a city name.", "error")
+    shinyalert("Unsuccessful", "You must input a city name attached to your assessment.", "error")
     return("City name not selected")
   }
   
@@ -30,7 +30,9 @@ process_file <- function(path, file, rec, org, responses) {
   # Check for similar city/name/date combo
   if (nrow(responses[which(responses$city == city & 
                            responses$name_date == name_date),]) > 0) {
-    shinyalert("Unsuccessful", "An file with the same assessment date has be previously uploaded.", "error")
+    shinyalert("Unsuccessful", "A file with the same assessment date has be previously uploaded.
+               Consider changing the 'Date completed' input in the excel file or
+               adding an additional identifier, e.g. '1/18/2026 v2'.", "error")
     return("Duplicated response")
   }
   
@@ -38,7 +40,8 @@ process_file <- function(path, file, rec, org, responses) {
   # Share?
   share <- file[["Response"]][which(file[["short_q"]] == "Share")]
   if (share == "No") {
-    shinyalert("Unsuccessful", "You must allow sharing to upload your results.", "error")
+    shinyalert("Unsuccessful", "'Are you willing to share your results with other cities' must
+               be set to 'Yes'.", "error")
     return("Must allow sharing")
   }
   
