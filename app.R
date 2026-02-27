@@ -29,26 +29,26 @@ source("observeEvent.R")
 ##  CATEGORIES
 ############################################################
 cats <- data.frame(abbr = c("", "DS", "CB", "PS", "IM", "AP", "SE"),
-              full = c("",
-                       "Data-sharing partnerships & management tools",
-                       "City/institutional buy-in, capacity building & training",
-                       "Public support & engagement",
-                       "Health and economic impact modelling",
-                       "Estimating air pollution",
-                       "Source & emission inventories"))
+                   full = c("",
+                            "Data-sharing partnerships & management tools",
+                            "City/institutional buy-in, capacity building & training",
+                            "Public support & engagement",
+                            "Health and economic impact modelling",
+                            "Estimating air pollution",
+                            "Source & emission inventories"))
 
 ############################################################
 ##  DOMAINS and EQUITY THEMES
 ############################################################
 dims <- data.frame(abbr = c("", "TC", "DI", "IP", "PE", "DE", "SO", "AI"),
-              full = c("",
-                       "Technical Capacity",
-                       "Data Integration",
-                       "Internal Processes",
-                       "Participation and Empowerment",
-                       "Distributional Equity",
-                       "Socioeconomic Resilience and Opportunity",
-                       "Access and Inclusivity"))
+                   full = c("",
+                            "Technical Capacity",
+                            "Data Integration",
+                            "Internal Processes",
+                            "Participation and Empowerment",
+                            "Distributional Equity",
+                            "Socioeconomic Resilience and Opportunity",
+                            "Access and Inclusivity"))
 
 
 ############################################################
@@ -81,48 +81,50 @@ ui <- fluidPage(
   
   # Main content
   div(id = "content",
-  div(img(src = "equipd_logo.png", style = "width:400px; height:53px;"), 
-      style = "display:flex; align-items:left; margin:20px;"),
-  sidebarLayout(
-    sidebarPanel(width = 3,
-      
-      # Download
-      h4("Step 1: Complete assessment"),
-      "a) Download: ",
-      downloadButton("downloadExcel", "Excel"),
-      downloadButton("downloadPDF", "PDF"),
-      
-      # Upload .xlsx
-      fileInput('upload', 'b) Upload assessment (Excel files (.xlsx) only)', 
-                accept = c(".xlsx"), multiple = FALSE),
-      
-      # Display results (radar plot)
-      h4("Step 2: Visualize results"),
-      selectInput("city", label = "a) Select a city", choices = ""),
-      selectInput("response1", label = "b) Select baseline", choices = ""),
-      selectInput("response2", label = "c) Select reassessment (if completed multiple times)", choices = ""),
-      
-      div( img(src='key.png', width = 225), align = "center"),
-      br(),
-      
-      # Scoring breakdown
-      # hr(style="border: none; height: 2px; background-color: black;"),
-      h4("Step 3: Identify Strengths and Opportunities"),
-      selectInput("category", label = "a) Select category", 
-                  choices = cats$full),
-      selectInput("dimension", label = "b) Select domain/theme", 
-                  choices = dims$full),
-      selectInput("comparison_city", label = "c) Select comparison", 
-                  choices = c(""))
-    ),
-    
-    
-    mainPanel(
-      plotOutput("radar", height = 800, width = 900),
-      htmlOutput("score_comparison"), br(),
-      tableOutput("score_table")
-    )
-  ))
+      div(img(src = "equipd_logo.png", style = "width:400px; height:53px;"), 
+          style = "display:flex; align-items:left; margin:20px;"),
+      sidebarLayout(
+        sidebarPanel(width = 3,
+                     
+                     downloadButton("downloadInst", "Before you begin"), br(),
+                     
+                     # Download
+                     h4("Step 1: Complete assessment"),
+                     "a) Download: ",
+                     downloadButton("downloadExcel", "Excel"),
+                     downloadButton("downloadPDF", "PDF"),
+                     
+                     # Upload .xlsx
+                     fileInput('upload', 'b) Upload assessment (Excel files (.xlsx) only)', 
+                               accept = c(".xlsx"), multiple = FALSE),
+                     
+                     # Display results (radar plot)
+                     h4("Step 2: Visualize results"),
+                     selectInput("city", label = "a) Select a city", choices = ""),
+                     selectInput("response1", label = "b) Select baseline", choices = ""),
+                     selectInput("response2", label = "c) Select reassessment (if completed multiple times)", choices = ""),
+                     
+                     div( img(src='key.png', width = 225), align = "center"),
+                     br(),
+                     
+                     # Scoring breakdown
+                     # hr(style="border: none; height: 2px; background-color: black;"),
+                     h4("Step 3: Identify Strengths and Opportunities"),
+                     selectInput("category", label = "a) Select category", 
+                                 choices = cats$full),
+                     selectInput("dimension", label = "b) Select domain/theme", 
+                                 choices = dims$full),
+                     selectInput("comparison_city", label = "c) Select comparison", 
+                                 choices = c(""))
+        ),
+        
+        
+        mainPanel(
+          imageOutput("radar", height = 750, width = 900),
+          htmlOutput("score_comparison"), br(),
+          tableOutput("score_table")
+        )
+      ))
 )
 
 ############################################################
@@ -169,12 +171,21 @@ server <- function(input, output, session) {
   
   
   # Initiate download
+  output$downloadInst <- downloadHandler(
+    filename = function() {
+      return("EQuiPD_Webapp_Instructions.pdf")
+    },
+    content = function(file) {
+      myfile <- srcpath <-  "./www/EQuiPD_Webapp_Instructions.pdf"
+      file.copy(myfile, file)
+    }
+  )
   output$downloadExcel <- downloadHandler(
     filename = function() {
       paste("EQuiPD", ".xlsx", sep='')
     },
     content = function(file) {
-      myfile <- srcpath <-  "./www/EQuiPD_260116.xlsx"
+      myfile <- srcpath <-  "./www/EQuiPD_260227.xlsx"
       file.copy(myfile, file)
     }
   )
@@ -183,7 +194,7 @@ server <- function(input, output, session) {
       paste("EQuiPD", ".pdf", sep='')
     },
     content = function(file) {
-      myfile <- srcpath <-  "./www/EQuiPD_260116.pdf"
+      myfile <- srcpath <-  "./www/EQuiPD_260227.pdf"
       file.copy(myfile, file)
     }
   )
@@ -192,7 +203,7 @@ server <- function(input, output, session) {
   
   # Save uploaded assessment
   observeEvent(input$upload, {
-    file <- read_xlsx(input$upload$datapath, sheet = 1, range = "A1:T300")
+    file <- read_xlsx(input$upload$datapath, sheet = "Self-Assessment", range = "A1:T300")
     
     # Check valid file (should have EQuiPD in row 1 col 1)
     if (colnames(file)[1] != "EQuiPD") {
@@ -288,14 +299,20 @@ server <- function(input, output, session) {
   })
   
   # Plot responses
-  output$radar <- renderPlot({
+  output$radar <- renderImage({
     req(radar_data())
-    if (nrow(radar_data()) == 0)
-      return()
-    g <- build_geoms(radar_data())
-    g2 <- build_geoms(radar_data2())
-    build_radar(g, g2)
-  }, res = 96)
+    out <- list(src = "www/radar.png", alt = "EQuiPD Radar Plot")
+    if (nrow(radar_data()) != 0) {
+      outfile <- tempfile(pattern = "EQuiPD_plot", fileext = ".png")
+      g <- build_geoms(radar_data())
+      g2 <- build_geoms(radar_data2())
+      png(outfile, width = 900, height = 750, res = 96)
+      print(build_radar(g, g2))
+      dev.off()
+      out <-list(src = outfile, alt = "EQuiPD Radar Plot")
+    }
+    return(out)
+  }, deleteFile = FALSE)
   
   # Create comparison diagram
   output$score_comparison <- renderUI({
@@ -349,7 +366,7 @@ server <- function(input, output, session) {
         out2 <- compare_dat()[idx, c("Question", "Response")]
         colnames(out2) <- c("Question text", "Comparison")
         out <- left_join(out, out2, by = c("Question text")
-                         )[, c("#", "Question text", "Recommendations", "Response", "Comparison")]
+        )[, c("#", "Question text", "Recommendations", "Response", "Comparison")]
       }
       out[order(out$Response, decreasing = FALSE, na.last = TRUE), ]
     } else {

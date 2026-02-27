@@ -174,18 +174,22 @@ build_radar <- function(g, g2) {
       geom_circle(aes(x0 = 0, y0 = 0, r = 1:3),
                   colour = "grey60", linetype = 3, linewidth = .3) +
       # Arcs
+      geom_arc(data = g$avg_arcs,
+               aes(x0 = x0, y0 = y0, r = r, start = start, end = end),
+               linewidth = 1, linetype = 1,
+               color = "#000000") +
       geom_arc(data = g2$avg_arcs,
                aes(x0 = x0, y0 = y0, r = r, start = start, end = end),
                linewidth = 1, linetype = 1,
-               color = "#000000")
+               color = "#AAAAAA")
     
   }
   
   plot <- plot +
     geom_text(data = g$label,
-              aes(x = x, y = y, label = str_wrap(cat, 20), 
+              aes(x = x, y = y, label = str_wrap(cat, 24), 
                   angle = rot, hjust = hjust),
-              size = 28 / .pt, lineheight = 2 / .pt,#14
+              size = 16 / .pt, lineheight = 2.5 / .pt,#14
               family = "Figtree") +
     coord_equal(clip = "off", expand = FALSE) +
     theme_void() +
@@ -194,11 +198,11 @@ build_radar <- function(g, g2) {
       legend.direction = "horizontal",
       legend.box = "horizontal",
       legend.margin = margin(t = 30),
-      plot.margin = margin(40, 80, 100, 100),
+      plot.margin = margin(20, 80, 100, 80),
       legend.text = element_text(family = "Figtree",
-        size = 60 / .pt),#30
+        size = 30 / .pt),#30
       legend.title = element_text(family = "Figtree",
-        size = 80 / .pt, face = "bold")#40
+        size = 40 / .pt, face = "bold")#40
     ) + 
     labs(fill = "")
   
