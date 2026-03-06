@@ -185,7 +185,7 @@ server <- function(input, output, session) {
       paste("EQuiPD", ".xlsx", sep='')
     },
     content = function(file) {
-      myfile <- srcpath <-  "./www/EQuiPD_260227.xlsx"
+      myfile <- srcpath <-  "./www/EQuiPD_260306.xlsx"
       file.copy(myfile, file)
     }
   )
@@ -194,7 +194,7 @@ server <- function(input, output, session) {
       paste("EQuiPD", ".pdf", sep='')
     },
     content = function(file) {
-      myfile <- srcpath <-  "./www/EQuiPD_260227.pdf"
+      myfile <- srcpath <-  "./www/EQuiPD_260306.pdf"
       file.copy(myfile, file)
     }
   )
